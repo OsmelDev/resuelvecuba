@@ -6,8 +6,10 @@ import Help from "../components/landing_page/HelpSection";
 import Beneficts from "../components/landing_page/BenefictsSection";
 import CTA from "../components/landing_page/CTASection";
 import Footer from "../components/landing_page/Footer";
+import { useAuthStore } from "../store/authStore";
 
 export default function HomePage() {
+  const { user } = useAuthStore();
   return (
     <>
       <Head>
@@ -31,22 +33,16 @@ export default function HomePage() {
         <meta property="og:type" content="website" />
       </Head>
 
-      {/* Hero Section */}
       <Hero />
 
-      {/* Categorías populares */}
       <PopularCategories />
 
-      {/* Cómo funciona */}
       <Help />
 
-      {/* Beneficios */}
       <Beneficts />
 
-      {/* CTA Final */}
-      <CTA />
+      {!user && <CTA />}
 
-      {/* Footer */}
       <Footer />
     </>
   );
