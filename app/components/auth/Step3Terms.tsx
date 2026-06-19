@@ -1,5 +1,3 @@
-"use client";
-
 import { useRegisterStore } from "@/app/store/registerStore";
 import { CheckCircle, FileText, ScrollText } from "lucide-react";
 
@@ -7,18 +5,18 @@ export default function Step3Terms() {
   const { data, updateData } = useRegisterStore();
 
   return (
-    <div className="space-y-3 pt-2">
-      {/* <!-- Términos y Condiciones --> */}
-      <div className="overflow-hidden border rounded-lg">
-        <div className="flex items-center gap-2 px-4 py-1 border-b bg-gray-50">
-          <FileText size={18} className="text-blue-600" />
-          <h3 className="font-semibold text-gray-800">
+    <div className="space-y-6">
+      {/* Términos y Condiciones */}
+      <div className="overflow-hidden border border-gray-200 rounded-xl">
+        <div className="flex items-center gap-2 px-4 py-3 border-b bg-gray-50">
+          <FileText size={18} className="text-[#3B82F6]" />
+          <h3 className="font-semibold text-[#1E3A5F]">
             Términos y Condiciones
           </h3>
         </div>
-        <div className="p-4 space-y-2 overflow-y-auto text-sm text-gray-600 max-h-36">
+        <div className="p-4 space-y-2 overflow-y-auto text-sm text-gray-600 max-h-48">
           <p>
-            1. Aceptación de los términos: Al registrarte en ServiciosApp,
+            1. Aceptación de los términos: Al registrarte en ResuelveCuba,
             aceptas cumplir con estos términos y condiciones.
           </p>
           <p>
@@ -52,13 +50,13 @@ export default function Step3Terms() {
         </div>
       </div>
 
-      {/* <!-- Contrato de Servicio --> */}
-      <div className="overflow-hidden border rounded-lg">
-        <div className="flex items-center gap-2 px-4 py-1 border-b bg-gray-50">
-          <ScrollText size={18} className="text-blue-600" />
-          <h3 className="font-semibold text-gray-800">Contrato de Servicio</h3>
+      {/* Contrato de Servicio */}
+      <div className="overflow-hidden border border-gray-200 rounded-xl">
+        <div className="flex items-center gap-2 px-4 py-3 border-b bg-gray-50">
+          <ScrollText size={18} className="text-[#3B82F6]" />
+          <h3 className="font-semibold text-[#1E3A5F]">Contrato de Servicio</h3>
         </div>
-        <div className="p-4 space-y-2 overflow-y-auto text-sm text-gray-600 max-h-36">
+        <div className="p-4 space-y-2 overflow-y-auto text-sm text-gray-600 max-h-48">
           <p>
             1. Relación contractual: Este contrato establece la relación entre
             el proveedor y el cliente.
@@ -81,7 +79,7 @@ export default function Step3Terms() {
           </p>
           <p>
             6. Resolución de conflictos: Cualquier disputa será resuelta en
-            tribunales de la ciudad de Santiago.
+            tribunales de la ciudad de La Habana.
           </p>
           <p>
             7. Confidencialidad: Ambas partes acuerdan mantener confidencialidad
@@ -94,37 +92,37 @@ export default function Step3Terms() {
         </div>
       </div>
 
-      {/* <!-- Aceptaciones --> */}
-      <div className="pt-1 space-y-2">
-        <label className="flex items-center gap-3 cursor-pointer">
+      {/* Aceptaciones */}
+      <div className="pt-2 space-y-3">
+        <label className="flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"
             checked={data.aceptaTerminos}
             onChange={(e) => updateData("aceptaTerminos", e.target.checked)}
-            className="w-3 h-3 text-blue-600 rounded focus:ring-blue-500"
+            className="w-4 h-4 mt-0.5 text-[#3B82F6] rounded focus:ring-[#3B82F6]"
           />
-          <span className="text-xs text-gray-700">
+          <span className="text-sm text-gray-700">
             He leído y acepto los{" "}
-            <span className="text-blue-600">Términos y Condiciones</span>
+            <span className="text-[#3B82F6]">Términos y Condiciones</span>
           </span>
         </label>
 
-        <label className="flex items-center gap-3 cursor-pointer">
+        <label className="flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"
             checked={data.aceptaContrato}
             onChange={(e) => updateData("aceptaContrato", e.target.checked)}
-            className="w-3 h-3 text-blue-600 rounded focus:ring-blue-500"
+            className="w-4 h-4 mt-0.5 text-[#3B82F6] rounded focus:ring-[#3B82F6]"
           />
-          <span className="text-xs text-gray-700">
+          <span className="text-sm text-gray-700">
             He leído y acepto el{" "}
-            <span className="text-blue-600">Contrato de Servicio</span>
+            <span className="text-[#3B82F6]">Contrato de Servicio</span>
           </span>
         </label>
       </div>
 
       {data.aceptaTerminos && data.aceptaContrato && (
-        <div className="flex items-center gap-2 p-1.5 text-xs text-green-700 rounded-lg bg-green-50">
+        <div className="flex items-center gap-2 p-3 text-sm text-green-700 border border-green-200 bg-green-50 rounded-xl">
           <CheckCircle size={18} />
           Has aceptado todos los términos correctamente
         </div>

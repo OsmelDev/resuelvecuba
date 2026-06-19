@@ -10,6 +10,7 @@ interface ProveedorStore {
 
   loadProveedores: (filtros: Filtros) => Promise<void>;
   loadProveedor: (id: string) => Promise<void>;
+  loadProveedoresByState: (state?: string) => Promise<void>;
 }
 
 interface ProveedorState {
@@ -25,10 +26,9 @@ interface ProveedorState {
   getProveedorPublico: (id: string) => Promise<void>;
 }
 export interface Filtros {
-  tipo_oferta: string;
-  calificacion: string;
-  ciudad: string;
   search: string;
+  ciudad: string;
+  tipo_oferta: string;
 }
 
 export const useProveedorStore = create<ProveedorStore>((set, get) => ({
@@ -43,8 +43,6 @@ export const useProveedorStore = create<ProveedorStore>((set, get) => ({
       const params = new URLSearchParams();
       if (filtros?.tipo_oferta)
         params.append("tipo_oferta", filtros.tipo_oferta);
-      if (filtros?.calificacion)
-        params.append("calificacion", filtros.calificacion);
       if (filtros?.ciudad) params.append("ciudad", filtros.ciudad);
       if (filtros?.search) params.append("search", filtros.search);
 
@@ -75,6 +73,24 @@ export const useProveedorStore = create<ProveedorStore>((set, get) => ({
       set({
         proveedor: response.data.proveedor,
         services: response.data.items,
+        isLoading: false,
+      });
+    } catch (error) {
+      console.log("Error obteniendo proveedor:", error);
+
+      set({ isLoading: false });
+    }
+  },
+
+  loadProveedoresByState: async (state?: string) => {
+    set({ isLoading: true });
+    try {
+      const url = state
+        ? `/admin/proveedores?estado=${state}`
+        : "/admin/proveedores";
+      const response = await api.get(url);
+      set({
+        proveedores: response.data.proveedores,
         isLoading: false,
       });
     } catch (error) {

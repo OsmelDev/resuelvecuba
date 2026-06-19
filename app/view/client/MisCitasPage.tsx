@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useSearchParams } from "next/navigation";
+import Head from "next/head";
 import Link from "next/link";
 import { useCitaStore } from "@/app/store/citaStore";
 import {
@@ -17,8 +17,7 @@ import {
   Package,
   LucideProps,
 } from "lucide-react";
-import CitaCard from "../../components/Clients/CitaCard";
-import LoadingComponent from "../../components/LoadingComponent";
+import CitaCard from "@/app/components/Clients/citas/CitaCard";
 
 const estadoConfig: Record<
   string,
@@ -37,33 +36,28 @@ const estadoConfig: Record<
   },
   confirmada: {
     label: "Confirmada",
-    color: "bg-green-100 text-green-800",
+    color: "bg-green-100 text-green-700",
     icon: CheckCircle,
   },
   completada: {
     label: "Completada",
-    color: "bg-blue-100 text-blue-800",
+    color: "bg-blue-100 text-blue-700",
     icon: CheckCircle,
   },
   cancelada: {
     label: "Cancelada",
-    color: "bg-red-100 text-red-800",
+    color: "bg-red-100 text-red-700",
     icon: XCircle,
   },
 };
 
 export default function MisCitasPage() {
-  const searchParams = useSearchParams();
   const { citas, isLoading, loadCitasCliente, cancelarCita } = useCitaStore();
-  const [success, setSuccess] = useState(false);
+
   const [cancelando, setCancelando] = useState<string | null>(null);
 
   useEffect(() => {
     loadCitasCliente();
-    if (searchParams.get("success") === "true") {
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 5000);
-    }
   }, []);
 
   const handleCancelar = async (id: string) => {
@@ -72,61 +66,65 @@ export default function MisCitasPage() {
 
     setCancelando(id);
     const result = await cancelarCita(id, motivo || undefined);
-    if (!result.success) {
-      alert(result.error);
-    }
+    if (!result.success) alert(result.error);
     setCancelando(null);
   };
 
-  if (isLoading) {
-    return <LoadingComponent />;
-  }
-
   return (
-    <div className="container px-4 py-8 mx-auto">
-      <h1 className="mb-2 text-3xl font-bold text-gray-800">Mis Citas</h1>
-      <p className="mb-6 text-gray-600">Historial de tus servicios agendados</p>
+    <>
+      <Head>
+        <title>Mis Citas | ResuelveCuba</title>
+        <meta name="description" content="Historial de tus citas" />
+      </Head>
 
-      {success && (
-        <div className="p-4 mb-6 text-green-700 bg-green-100 rounded-lg">
-          ✅ ¡Cita solicitada exitosamente! El proveedor te confirmará pronto.
-        </div>
-      )}
-
-      {citas.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-lg shadow">
-          <Calendar size={48} className="mx-auto mb-4 text-gray-400" />
-          <h3 className="mb-2 text-lg font-medium text-gray-900">
-            No tienes citas agendadas
-          </h3>
-          <p className="mb-4 text-gray-500">
-            Explora los servicios y agenda tu primera cita
+      <div className="min-h-screen bg-[#F3F4F6]">
+        <div className="container px-4 py-8 mx-auto">
+          <h1 className="text-3xl font-bold text-[#1E3A5F] mb-2">Mis Citas</h1>
+          <p className="mb-6 text-gray-600">
+            Historial de tus servicios agendados
           </p>
-          <Link
-            href="/cliente/buscar"
-            className="inline-flex items-center gap-2 px-4 py-2 text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
-          >
-            <Package size={18} />
-            Buscar Servicios
-          </Link>
+
+          {isLoading ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3B82F6]"></div>
+            </div>
+          ) : citas.length === 0 ? (
+            <div className="p-12 text-center bg-white shadow-sm rounded-2xl">
+              <Calendar size={48} className="mx-auto mb-4 text-gray-400" />
+              <h3 className="text-lg font-medium text-[#1E3A5F] mb-2">
+                No tienes citas agendadas
+              </h3>
+              <p className="mb-4 text-gray-500">
+                Explora los servicios y agenda tu primera cita
+              </p>
+              <Link
+                href="/cliente/proveedores"
+                className="inline-flex items-center gap-2 bg-[#3B82F6] hover:bg-[#F59E0B] text-white px-4 py-2 rounded-xl transition-colors"
+              >
+                <Package size={18} />
+                Buscar profesionales
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {citas.map((cita) => {
+                const EstadoIcon =
+                  estadoConfig[cita.estado]?.icon || AlertCircle;
+                return (
+                  <CitaCard
+                    IconState={EstadoIcon}
+                    canceling={cancelando}
+                    cita={cita}
+                    configState={estadoConfig}
+                    handleCancel={handleCancelar}
+                    key={cita._id}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="space-y-4">
-          {citas.map((cita) => {
-            const EstadoIcon = estadoConfig[cita.estado]?.icon || AlertCircle;
-            return (
-              <CitaCard
-                estadoConfig={estadoConfig}
-                EstadoIcon={EstadoIcon}
-                cancelando={cancelando}
-                handleCancelar={handleCancelar}
-                cita={cita}
-                key={cita._id}
-              />
-            );
-          })}
-        </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 }

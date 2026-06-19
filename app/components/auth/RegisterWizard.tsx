@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useRegisterStore } from "@/app/store/registerStore";
@@ -11,12 +10,11 @@ import { ChevronLeft, ChevronRight, CheckCircle, Loader2 } from "lucide-react";
 
 export default function RegisterWizard() {
   const router = useRouter();
-  const { step, nextStep, prevStep, register, isLoading, error, resetData } =
+  const { step, nextStep, prevStep, signup, isLoading, error, resetData } =
     useRegisterStore();
   const { login } = useAuthStore();
   const [registroExitoso, setRegistroExitoso] = useState(false);
 
-  // Limpiar estado al desmontar
   useEffect(() => {
     return () => {
       resetData();
@@ -24,10 +22,9 @@ export default function RegisterWizard() {
   }, [resetData]);
 
   const handleRegister = async () => {
-    const result = await register();
+    const result = await signup();
     if (result.success) {
       setRegistroExitoso(true);
-      // Auto-login después de registro exitoso
       const { data } = useRegisterStore.getState();
       await login(data.email, data.password);
       setTimeout(() => {
@@ -54,28 +51,30 @@ export default function RegisterWizard() {
         <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-100 rounded-full">
           <CheckCircle size={32} className="text-green-600" />
         </div>
-        <h2 className="mb-2 text-2xl font-bold text-gray-800">
+        <h2 className="text-2xl font-bold text-[#1E3A5F] mb-2">
           ¡Registro exitoso!
         </h2>
         <p className="mb-4 text-gray-600">Redirigiendo a tu panel...</p>
-        <Loader2 size={24} className="mx-auto text-blue-600 animate-spin" />
+        <Loader2 size={24} className="animate-spin mx-auto text-[#3B82F6]" />
       </div>
     );
   }
 
   return (
     <div>
-      {/* Progress bar */}
-      <div className="mb-2">
-        <div className="flex justify-between mb-2">
+      <div className="mb-8">
+        <div className="flex flex-col justify-between gap-2 mb-2 sm:flex-row">
           {steps.map((s) => (
             <div
               key={s.number}
-              className={`text-center flex-1 ${
-                step >= s.number ? "text-blue-600" : "text-gray-400"
+              className={`text-center flex-1 text-sm ${
+                step >= s.number ? "text-[#3B82F6]" : "text-gray-400"
               }`}
             >
-              <div className="text-xs font-medium">{s.title}</div>
+              <div className="hidden font-medium sm:block">{s.title}</div>
+              <div className="sm:hidden">
+                {step >= s.number ? `✓ Paso ${s.number}` : `Paso ${s.number}`}
+              </div>
             </div>
           ))}
         </div>
@@ -83,11 +82,11 @@ export default function RegisterWizard() {
           {steps.map((s) => (
             <div
               key={s.number}
-              className={`h-1 flex-1 rounded-full transition ${
+              className={`h-1 flex-1 rounded-full transition-all duration-300 ${
                 step > s.number
                   ? "bg-green-500"
                   : step === s.number
-                    ? "bg-blue-600"
+                    ? "bg-[#3B82F6]"
                     : "bg-gray-200"
               }`}
             />
@@ -95,23 +94,22 @@ export default function RegisterWizard() {
         </div>
       </div>
 
-      {/* Formulario */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         <CurrentComponent />
 
         {error && (
-          <div className="p-2 text-sm text-center text-red-600 rounded-lg bg-red-50">
+          <div className="p-3 text-sm text-red-600 border border-red-200 bg-red-50 rounded-xl">
             {error}
           </div>
         )}
 
-        {/* Botones */}
-        <div className="flex gap-3 pt-2">
+        {/* Botones - Responsive */}
+        <div className="flex flex-col gap-3 pt-4 sm:flex-row">
           {step > 1 && (
             <button
               type="button"
               onClick={prevStep}
-              className="flex items-center justify-center flex-1 gap-2 px-4 py-1 text-gray-700 transition border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="flex items-center justify-center order-2 gap-2 px-4 py-2 text-gray-700 transition border border-gray-300 sm:order-1 rounded-xl hover:bg-gray-50"
             >
               <ChevronLeft size={18} />
               Anterior
@@ -122,7 +120,7 @@ export default function RegisterWizard() {
             <button
               type="button"
               onClick={nextStep}
-              className="flex items-center justify-center flex-1 gap-2 px-4 py-1 text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
+              className="order-1 sm:order-2 flex items-center justify-center gap-2 bg-[#3B82F6] hover:bg-[#F59E0B] text-white px-4 py-2 rounded-xl transition-colors"
             >
               Siguiente
               <ChevronRight size={18} />
@@ -132,7 +130,7 @@ export default function RegisterWizard() {
               type="button"
               onClick={handleRegister}
               disabled={isLoading}
-              className="flex items-center justify-center flex-1 gap-2 px-4 py-1 text-white transition bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50"
+              className="order-1 sm:order-2 flex items-center justify-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] text-white px-4 py-2 rounded-xl transition-colors disabled:opacity-50"
             >
               {isLoading ? (
                 <>

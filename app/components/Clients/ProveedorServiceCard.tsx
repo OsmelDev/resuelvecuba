@@ -1,7 +1,13 @@
 import { ItemProveedor, Proveedor } from "@/app/types/dataTypes";
-import { CheckCircle, Clock, ShoppingBag } from "lucide-react";
+import {
+  CheckCircle,
+  ClipboardPaste,
+  Clock,
+  MessageSquare,
+  ShoppingBag,
+} from "lucide-react";
 import Link from "next/link";
-import React, { FC } from "react";
+import { FC } from "react";
 
 interface ProveedorServiceCardProps {
   item: ItemProveedor;
@@ -57,13 +63,14 @@ const ProveedorServiceCard: FC<ProveedorServiceCardProps> = ({
       {/* Botón para servicios o productos con variantes */}
       <div className="mt-4">
         {item.tipo === "servicio" ? (
-          <div className="flex justify-between gap-8">
+          <div className="flex flex-col items-center justify-between gap-2 md:gap-8 md:flex-row">
             {/* <button > */}
             <Link
               href={`/cliente/solicitar-cita/${item._id}`}
-              className="flex items-center justify-center w-1/2 px-1 py-2 text-xs text-white transition bg-green-600 rounded-lg hover:bg-green-700"
+              className="flex items-center justify-center w-full gap-2 px-1 py-2 text-xs text-white transition bg-green-600 rounded-lg md:py-2 md:w-1/2 hover:bg-green-700"
             >
-              Solicitar Cita
+              <ClipboardPaste size={16} />
+              Agendar Cita
             </Link>
             {/* </button> */}
             <button
@@ -77,9 +84,9 @@ const ProveedorServiceCard: FC<ProveedorServiceCardProps> = ({
                   );
                 }
               }}
-              className="flex items-center justify-center w-1/2 gap-2 px-2 py-1 text-xs text-white transition bg-green-600 rounded-lg hover:bg-green-700"
+              className="flex items-center justify-center w-full gap-2 px-2 py-2 text-xs text-white transition bg-green-600 rounded-lg md:w-1/2 hover:bg-green-700"
             >
-              <ShoppingBag size={16} />
+              <MessageSquare size={16} />
               WhatsApp
             </button>
           </div>

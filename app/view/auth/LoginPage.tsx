@@ -1,12 +1,13 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Head from "next/head";
 import { useAuthStore } from "@/app/store/authStore";
 import { useAutoClear } from "@/app/hooks/useAutoClear";
-import { Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react";
-import { useUIStore } from "@/app/store/uiStore";
+import { ArrowLeft } from "lucide-react";
+import LogoSimple from "@/app/components/ui/LogoSimple";
+import LoginForm from "@/app/components/auth/LoginForm";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,13 +19,8 @@ export default function LoginPage() {
     message,
     clearError,
     clearMessage,
+    isLoading,
   } = useAuthStore();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const { showToast, showLoading, hideLoading } = useUIStore();
-
   useAutoClear(error, clearError);
   useAutoClear(message, clearMessage);
 
@@ -36,117 +32,56 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, user, router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (loading) return;
-
-    setLoading(true);
-    showLoading("Iniciando sesión...");
-
-    const result = await login(email, password);
-    hideLoading();
-    setLoading(false);
-
-    if (!result.success) {
-      showToast(result.error || "Error al iniciar sesión", "error");
-    } else {
-      showToast("¡Bienvenido de vuelta!", "success");
-    }
-  };
-
   return (
-    <div className="  h-full top-0 z-50 flex items-center justify-center py-12 px-4 absolute border w-full bg-gray-50">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-        <div className="mb-8 text-center">
+    <>
+      <Head>
+        <title>Iniciar Sesión | ResuelveCuba</title>
+        <meta name="description" content="Accede a tu cuenta de ResuelveCuba" />
+      </Head>
+
+      <div className="flex items-center justify-center max-h-screen px-4 py-12 bg-gradient-to-br from-blue-50 to-orange-50">
+        <div className="w-full max-w-md">
+          {/* Botón volver */}
           <Link
             href="/"
-            className="inline-flex items-center gap-2 mb-4 text-sm text-gray-500 hover:text-gray-700"
+            className="inline-flex items-center gap-2 text-[#1E3A5F] hover:text-[#3B82F6] mb-6 transition"
           >
-            <ArrowLeft size={16} />
+            <ArrowLeft size={18} />
             Volver al inicio
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Bienvenido</h1>
-          <p className="mt-1 text-gray-600">Inicia sesión en tu cuenta</p>
-        </div>
 
-        {message && (
-          <div className="p-3 mb-4 text-sm text-green-700 border border-green-200 rounded-lg bg-green-50">
-            {message}
-          </div>
-        )}
-
-        {error && (
-          <div className="p-3 mb-4 text-sm text-red-600 border border-red-200 rounded-lg bg-red-50">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block mb-1 text-sm font-medium text-gray-700">
-              Correo electrónico
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 transition border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="tu@email.com"
-              disabled={loading}
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1 text-sm font-medium text-gray-700">
-              Contraseña
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 pr-10 transition border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="••••••••"
-                disabled={loading}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute text-gray-400 -translate-y-1/2 right-3 top-1/2 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
+          {/* Tarjeta de login */}
+          <div className="p-8 bg-white shadow-xl rounded-2xl">
+            {/* Logo */}
+            <div className="flex justify-center mb-6">
+              <LogoSimple variant="simple" size="md" />
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex items-center justify-center w-full gap-2 py-2 font-medium text-white transition bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Ingresando...
-              </>
-            ) : (
-              "Iniciar Sesión"
+            {/* Título */}
+            <div className="mb-8 text-center">
+              <h1 className="text-2xl font-bold text-[#1E3A5F]">
+                Bienvenido de vuelta
+              </h1>
+              <p className="mt-1 text-gray-500">Inicia sesión en tu cuenta</p>
+            </div>
+
+            {/* Mensajes */}
+            {message && (
+              <div className="p-3 mb-4 text-sm text-green-700 border border-green-200 bg-green-50 rounded-xl">
+                {message}
+              </div>
             )}
-          </button>
 
-          <div className="text-sm text-center text-gray-600">
-            ¿No tienes cuenta?{" "}
-            <Link
-              href="/register"
-              className="font-medium text-blue-600 hover:text-blue-700"
-            >
-              Regístrate aquí
-            </Link>
+            {error && (
+              <div className="p-3 mb-4 text-sm text-red-600 border border-red-200 bg-red-50 rounded-xl">
+                {error}
+              </div>
+            )}
+
+            <LoginForm login={login} isLoading={isLoading} />
           </div>
-        </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

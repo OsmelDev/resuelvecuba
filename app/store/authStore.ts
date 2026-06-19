@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import api from "@/app/services/api";
 import { User } from "../types/dataTypes";
+import { FieldValues } from "react-hook-form";
 
 interface AuthState {
   user: User | null;
@@ -39,8 +40,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   login: async (email: string, password: string) => {
     set({ isLoading: true, error: null, message: null });
+
+    const data = {
+      email,
+      password,
+    };
     try {
-      const response = await api.post("/auth/login", { email, password });
+      const response = await api.post("/auth/login", data);
       const { user } = response.data;
       console.log(user);
       set({

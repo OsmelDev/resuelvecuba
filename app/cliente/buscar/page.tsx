@@ -1,8 +1,7 @@
-import ClientServiceSearchPage from "@/app/view/client/ClientServiceSearchPage";
-import React from "react";
+import SearchServicePage from "@/app/view/client/ClientServiceSearchPage";
 
 const page = () => {
-  return <ClientServiceSearchPage />;
+  return <SearchServicePage />;
 };
 
 export default page;

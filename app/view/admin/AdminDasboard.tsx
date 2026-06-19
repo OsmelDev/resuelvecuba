@@ -2,23 +2,23 @@
 
 import { useEffect } from "react";
 import { useAuthStore } from "@/app/store/authStore";
-import { useActions } from "../../hooks/useActions";
 import StadisticCard from "../../components/admin/StadistiscCard";
 import QuickActions from "../../components/admin/QuickActions";
-import LoadingComponent from "../../components/LoadingComponent";
+import { useAdminStore } from "@/app/store/adminStore";
+import LoadingScreen from "@/app/components/ui/LoadingScreen";
 
 export default function AdminDashboard() {
   const { user } = useAuthStore();
-  const { cargarEstadisticas, estadisticas, loading } = useActions();
+  const { cargarEstadisticas, isLoading, estadisticas } = useAdminStore();
 
   useEffect(() => {
     cargarEstadisticas();
   }, []);
 
-  if (loading) {
-    return <LoadingComponent />;
+  if (isLoading) {
+    return <LoadingScreen />;
   }
-
+  console.log(estadisticas);
   return (
     <div className="container px-4 py-8 mx-auto">
       <div className="mb-8">

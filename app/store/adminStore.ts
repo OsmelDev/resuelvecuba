@@ -18,7 +18,7 @@ interface AdminStore {
     dias_activar: number;
     periodo_prueba: boolean;
   };
-  cargarProveedores: (filtros: string) => Promise<void>;
+  cargarProveedores: (filtros?: string) => Promise<void>;
   cargarEstadisticas: () => Promise<void>;
   activarProveedor: (
     openModalActivation: Dispatch<SetStateAction<Proveedor | null>>,

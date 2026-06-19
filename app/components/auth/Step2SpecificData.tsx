@@ -9,11 +9,11 @@ export default function Step2SpecificData() {
   if (data.tipo === "cliente") {
     return (
       <div className="space-y-5">
-        <div className="bg-blue-50 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-800 mb-2">
+        <div className="p-4 border border-blue-100 bg-blue-50 rounded-xl">
+          <h3 className="font-semibold text-[#1E3A5F] mb-2">
             Resumen de tu cuenta
           </h3>
-          <div className="space-y-1 text-sm text-blue-700">
+          <div className="space-y-1 text-sm text-gray-700">
             <p>
               <strong>Nombre:</strong> {data.nombre} {data.apellidos}
             </p>
@@ -26,7 +26,7 @@ export default function Step2SpecificData() {
           </div>
         </div>
 
-        <div className="bg-gray-50 rounded-lg p-4 text-center text-gray-500 text-sm">
+        <div className="p-4 text-sm text-center text-gray-500 border border-gray-100 bg-gray-50 rounded-xl">
           Como cliente, podrás buscar y contratar servicios o comprar productos.
         </div>
       </div>
@@ -34,79 +34,75 @@ export default function Step2SpecificData() {
   }
 
   return (
-    <div className="space-y-5">
-      {/* Nombre del negocio */}
+    <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block mb-1 text-sm font-medium text-gray-700">
           Nombre del negocio *
         </label>
         <div className="relative">
           <Building2
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute text-gray-400 -translate-y-1/2 left-3 top-1/2"
           />
           <input
             type="text"
             value={data.negocio}
             onChange={(e) => updateData("negocio", e.target.value)}
-            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#3B82F6] focus:border-[#3B82F6] outline-none transition"
             placeholder="Mi Negocio SPA"
           />
         </div>
       </div>
 
-      {/* Dirección */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block mb-1 text-sm font-medium text-gray-700">
           Dirección completa *
         </label>
         <div className="relative">
-          <MapPin size={18} className="absolute left-3 top-3 text-gray-400" />
+          <MapPin size={18} className="absolute text-gray-400 left-3 top-3" />
           <textarea
             rows={2}
             value={data.direccion}
             onChange={(e) => updateData("direccion", e.target.value)}
-            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
-            placeholder="Calle, número, ciudad, región"
+            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#3B82F6] focus:border-[#3B82F6] outline-none transition resize-none"
+            placeholder="Calle, número, ciudad, provincia"
           />
         </div>
       </div>
 
-      {/* Teléfono fijo */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block mb-1 text-sm font-medium text-gray-700">
           Teléfono fijo (opcional)
         </label>
         <div className="relative">
           <Phone
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute text-gray-400 -translate-y-1/2 left-3 top-1/2"
           />
           <input
             type="tel"
             value={data.telefonoFijo}
             onChange={(e) => updateData("telefonoFijo", e.target.value)}
-            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-            placeholder="+56 2 1234 5678"
+            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#3B82F6] focus:border-[#3B82F6] outline-none transition"
+            placeholder="+53 7 123 4567"
           />
         </div>
       </div>
 
-      {/* ✅ TIPO DE OFERTA - Servicios vs Productos */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block mb-2 text-sm font-medium text-gray-700">
           ¿Qué ofreces? *
         </label>
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <button
             type="button"
             onClick={() => {
               updateData("tipo_oferta", "servicios");
               updateData("servicioDomicilio", data.servicioDomicilio);
             }}
-            className={`flex-1 py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
+            className={`flex-1 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 ${
               data.tipo_oferta === "servicios"
-                ? "bg-blue-600 text-white"
+                ? "bg-[#3B82F6] text-white shadow-md"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -119,9 +115,9 @@ export default function Step2SpecificData() {
               updateData("tipo_oferta", "productos");
               updateData("servicioDomicilio", false);
             }}
-            className={`flex-1 py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
+            className={`flex-1 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 ${
               data.tipo_oferta === "productos"
-                ? "bg-blue-600 text-white"
+                ? "bg-[#3B82F6] text-white shadow-md"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -131,9 +127,8 @@ export default function Step2SpecificData() {
         </div>
       </div>
 
-      {/* Campos específicos para SERVICIOS */}
       {data.tipo_oferta === "servicios" && (
-        <div>
+        <div className="p-4 bg-gray-50 rounded-xl">
           <label className="flex items-center gap-3 cursor-pointer">
             <div className="relative">
               <input
@@ -144,7 +139,7 @@ export default function Step2SpecificData() {
                 }
                 className="sr-only peer"
               />
-              <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition"></div>
+              <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-[#3B82F6] transition"></div>
               <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></div>
             </div>
             <div className="flex items-center gap-2">
@@ -154,16 +149,15 @@ export default function Step2SpecificData() {
               </span>
             </div>
           </label>
-          <p className="text-xs text-gray-400 mt-1 ml-12">
+          <p className="mt-2 ml-12 text-xs text-gray-400">
             Los clientes podrán solicitar que te desplaces a su ubicación
           </p>
         </div>
       )}
 
-      {/* Campos específicos para PRODUCTOS */}
       {data.tipo_oferta === "productos" && (
-        <div className="space-y-4 border-t pt-4 mt-2">
-          <div>
+        <div className="pt-4 space-y-4 border-t border-gray-100">
+          <div className="p-4 bg-gray-50 rounded-xl">
             <label className="flex items-center gap-3 cursor-pointer">
               <div className="relative">
                 <input
@@ -172,7 +166,7 @@ export default function Step2SpecificData() {
                   onChange={(e) => updateData("ofrece_envio", e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition"></div>
+                <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-[#3B82F6] transition"></div>
                 <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></div>
               </div>
               <div className="flex items-center gap-2">
@@ -182,13 +176,13 @@ export default function Step2SpecificData() {
                 </span>
               </div>
             </label>
-            <p className="text-xs text-gray-400 mt-1 ml-12">
+            <p className="mt-2 ml-12 text-xs text-gray-400">
               Los clientes podrán consultar costos de envío por WhatsApp
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block mb-1 text-sm font-medium text-gray-700">
               Política de devolución (opcional)
             </label>
             <textarea
@@ -197,7 +191,7 @@ export default function Step2SpecificData() {
               onChange={(e) =>
                 updateData("politica_devolucion", e.target.value)
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#3B82F6] focus:border-[#3B82F6] outline-none transition resize-none"
               placeholder="Ej: 30 días para devoluciones, producto debe estar en su empaque original..."
             />
           </div>

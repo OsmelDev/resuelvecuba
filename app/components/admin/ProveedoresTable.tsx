@@ -1,6 +1,7 @@
 import { useActions } from "@/app/hooks/useActions";
 import { useHandleError } from "@/app/hooks/useHandleError";
 import api from "@/app/services/api";
+import { useAdminStore } from "@/app/store/adminStore";
 import { Proveedor } from "@/app/types/dataTypes";
 import { Dispatch, FC, SetStateAction, useCallback } from "react";
 
@@ -16,16 +17,17 @@ const ProveedoresTable: FC<ProveedoresTableProps> = ({
   proveedores,
 }) => {
   const { handleError } = useHandleError();
-  const { cargarProveedores } = useActions();
+  // const { cargarProveedores } = useActions();
+  const { cargarProveedores } = useAdminStore();
 
   const extenderPeriodo = async (id: string, dias: number) => {
     try {
       await api.put(`/admin/proveedores/${id}/extender`, { dias });
-      await cargarProveedores(estadoFiltro);
     } catch (error) {
       const message = handleError(error);
-      console.error("Error:", error);
       alert(message || "Error al extender período");
+    } finally {
+      cargarProveedores();
     }
   };
 
@@ -35,17 +37,18 @@ const ProveedoresTable: FC<ProveedoresTableProps> = ({
       await api.put(`/admin/proveedores/${id}/suspender`, {
         motivo: "Suspendido por administrador",
       });
-      await cargarProveedores(estadoFiltro);
     } catch (error) {
       console.error("Error:", error);
       const message = handleError(error);
       alert(message || "Error al suspender proveedor");
+    } finally {
+      cargarProveedores(estadoFiltro);
     }
   };
 
   const getEstadoBadge = (proveedor: Proveedor) => {
     const expirado = new Date(proveedor.fecha_expiracion) < new Date();
-
+    //expirado en true
     if (!proveedor.activo && expirado) {
       return { label: "Expirado", color: "bg-red-100 text-red-800" };
     }
@@ -99,6 +102,8 @@ const ProveedoresTable: FC<ProveedoresTableProps> = ({
               const expirado =
                 new Date(proveedor.fecha_expiracion) < new Date();
 
+              const fechaExpiracion = new Date(proveedor.fecha_expiracion);
+
               return (
                 <tr key={proveedor._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
@@ -138,7 +143,7 @@ const ProveedoresTable: FC<ProveedoresTableProps> = ({
                       </div>
                     ) : (
                       <div className="text-sm text-red-600">
-                        {expirado ? "Expirado" : "Suspendido"}
+                        {expirado ? "Expirado" : "Suspendido"}ss
                       </div>
                     )}
                   </td>
@@ -166,6 +171,7 @@ const ProveedoresTable: FC<ProveedoresTableProps> = ({
                           >
                             Suspender
                           </button>
+
                           {proveedor.periodo_prueba && (
                             <button
                               onClick={() => openModal(proveedor)}

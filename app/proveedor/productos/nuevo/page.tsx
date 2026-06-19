@@ -1,8 +1,7 @@
-import NuevoProductoPage from "@/app/view/proveedor/NewProductPage";
-import React from "react";
+import CreateNewProductPage from "@/app/view/proveedor/NewProductPage";
 
 const page = () => {
-  return <NuevoProductoPage />;
+  return <CreateNewProductPage />;
 };
 
 export default page;

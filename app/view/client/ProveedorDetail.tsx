@@ -1,29 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter, useParams } from "next/navigation";
+import Head from "next/head";
 import { useProveedorStore } from "@/app/store/proveedorStore";
-import {
-  MapPin,
-  Star,
-  Phone,
-  Mail,
-  Package,
-  Wrench,
-  Truck,
-  Home,
-  AlertCircle,
-  ArrowLeft,
-} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { ItemProveedor } from "@/app/types/dataTypes";
-import ProveedorServiceCard from "@/app/components/Clients/ProveedorServiceCard";
-import ModalProductSelected from "@/app/components/Clients/ModalProductSelected";
+import LoadingScreen from "@/app/components/ui/LoadingScreen";
+import Header from "@/app/components/Clients/proveedor/Header";
+import ServiceCard from "@/app/components/Clients/proveedor/ServiceCard";
+import VariantSelectModal from "@/app/components/Clients/proveedor/VariantSelectModal";
 
-export default function PerfilProveedorPage() {
+export default function ProveedorDetail() {
   const params = useParams();
   const router = useRouter();
-  const id = params.id as string;
+  const { id } = params;
   const { proveedor, services, isLoading, loadProveedor } = useProveedorStore();
 
   const [modalAbierto, setModalAbierto] = useState(false);
@@ -35,11 +26,11 @@ export default function PerfilProveedorPage() {
 
   useEffect(() => {
     if (id) {
-      loadProveedor(id);
+      loadProveedor(id as string);
     }
   }, [id]);
 
-  const abrirModalVariantes = (item: ItemProveedor) => {
+  const openVariantModal = (item: ItemProveedor) => {
     setProductoSeleccionado(item);
     setVarianteSeleccionada({});
     setModalAbierto(true);
@@ -50,16 +41,15 @@ export default function PerfilProveedorPage() {
   };
 
   const handleComprarWhatsApp = () => {
-    if (!proveedor) return;
+    if (!productoSeleccionado) return;
 
     const telefono = proveedor?.telefono;
     if (!telefono) return;
 
-    let mensaje = `Hola, vi tu producto "${productoSeleccionado?.nombre}" en ServiciosApp.%0A`;
-    mensaje += `%0A📦 Producto: ${productoSeleccionado?.nombre}`;
-    mensaje += `%0A💰 Precio: $${productoSeleccionado?.precio.toLocaleString()}`;
+    let mensaje = `Hola, vi tu producto "${productoSeleccionado.nombre}" en ResuelveCuba.%0A`;
+    mensaje += `%0A📦 Producto: ${productoSeleccionado.nombre}`;
+    mensaje += `%0A💰 Precio: $${productoSeleccionado.precio.toLocaleString()}`;
 
-    // ✅ Agregar variantes seleccionadas al mensaje
     if (Object.keys(varianteSeleccionada).length > 0) {
       mensaje += `%0A🎨 Opciones seleccionadas:`;
       for (const [tipo, valor] of Object.entries(varianteSeleccionada)) {
@@ -76,43 +66,14 @@ export default function PerfilProveedorPage() {
     setVarianteSeleccionada({});
   };
 
-  // Función para generar opciones según el tipo de variante
-  const obtenerOpcionesVariante = (item: ItemProveedor) => {
-    if (!item.variantes) return [];
-
-    const { tipo, opciones } = item.variantes;
-
-    if (tipo === "talla_color") {
-      // Para talla y color, necesitamos combinar
-      const tallas = opciones.filter((o: string) =>
-        ["S", "M", "L", "XL", "XS", "XXL"].includes(o),
-      );
-      const colores = opciones.filter(
-        (o: string) => !["S", "M", "L", "XL", "XS", "XXL"].includes(o),
-      );
-      return { tipo: "talla_color", tallas, colores };
-    }
-
-    return { tipo, opciones };
-  };
-
-  console.log(services);
-  console.log(proveedor);
-
   if (isLoading) {
-    return (
-      <div className="container px-4 py-8 mx-auto">
-        <div className="flex items-center justify-center h-64">
-          <div className="w-12 h-12 border-b-2 border-blue-600 rounded-full animate-spin"></div>
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!proveedor) {
     return (
-      <div className="container px-4 py-8 mx-auto">
-        <div className="p-4 text-center text-red-600 rounded-lg bg-red-50">
+      <div className="min-h-screen flex justify-center items-center bg-[#F3F4F6]">
+        <div className="p-4 text-center text-red-600 bg-red-50 rounded-xl">
           Proveedor no encontrado
         </div>
       </div>
@@ -122,124 +83,65 @@ export default function PerfilProveedorPage() {
   const esServicios = proveedor.tipo_oferta === "servicios";
 
   return (
-    <div className="container max-w-5xl px-4 py-8 mx-auto">
-      {/* Botón volver */}
-      <button
-        onClick={() => router.back()}
-        className="flex items-center gap-2 mb-6 text-gray-600 transition hover:text-gray-800"
-      >
-        <ArrowLeft size={20} />
-        Volver
-      </button>
+    <>
+      <Head>
+        <title>{proveedor.negocio || proveedor.nombre} | ResuelveCuba</title>
+        <meta
+          name="description"
+          content={`Contacta con ${proveedor.negocio || proveedor.nombre} en ResuelveCuba`}
+        />
+      </Head>
 
-      {/* Header del proveedor */}
-      <div className="p-6 mb-6 bg-white rounded-lg shadow">
-        <div className="flex flex-col items-start justify-between gap-4 md:flex-row">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              {esServicios ? (
-                <Wrench size={24} className="text-blue-600" />
-              ) : (
-                <Package size={24} className="text-green-600" />
-              )}
-              <h1 className="text-2xl font-bold text-gray-800">
-                {proveedor.negocio || proveedor.nombre}
-              </h1>
-            </div>
+      <div className="min-h-screen bg-[#F3F4F6]">
+        <div className="container max-w-5xl px-4 py-8 mx-auto">
+          {/* Botón volver */}
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 text-[#1E3A5F] hover:text-[#3B82F6] mb-6 transition"
+          >
+            <ArrowLeft size={20} />
+            Volver
+          </button>
 
-            <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-500">
-              <div className="flex items-center gap-1">
-                <Star size={14} className="text-yellow-400 fill-current" />
-                {proveedor.calificacion_promedio || "Nuevo"}(
-                {proveedor.total_resenas || 0} reseñas)
-              </div>
-            </div>
+          {/* Header del proveedor */}
+          <Header proveedor={proveedor} esServicios={esServicios} />
 
-            <div className="space-y-2">
-              <div className="flex items-center gap-1 text-sm text-gray-500">
-                <MapPin size={14} />
-                {proveedor.ubicacion?.direccion_texto ||
-                  "Ubicación no especificada"}
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Phone size={14} className="text-gray-400" />
-                <a
-                  href={`tel:${proveedor.telefono}`}
-                  className="text-blue-600 hover:underline"
-                >
-                  {proveedor.telefono}
-                </a>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Mail size={14} className="text-gray-400" />
-                <a
-                  href={`mailto:${proveedor.email}`}
-                  className="text-blue-600 hover:underline"
-                >
-                  {proveedor.email}
-                </a>
-              </div>
-            </div>
-          </div>
+          {/* Lista de items */}
+          <div className="p-6 bg-white shadow-sm rounded-2xl">
+            <h2 className="text-xl font-semibold text-[#1E3A5F] mb-4">
+              {esServicios ? "Servicios ofrecidos" : "Productos disponibles"}
+            </h2>
 
-          {/* Badges */}
-          <div className="flex flex-wrap gap-2">
-            {esServicios && proveedor.servicioDomicilio && (
-              <span className="flex items-center gap-1 px-3 py-1 text-sm text-green-700 bg-green-100 rounded-full">
-                <Home size={14} />
-                Servicio a domicilio
-              </span>
-            )}
-            {!esServicios && proveedor.ofrece_envio && (
-              <span className="flex items-center gap-1 px-3 py-1 text-sm text-green-700 bg-green-100 rounded-full">
-                <Truck size={14} />
-                Ofrece envíos
-              </span>
-            )}
-            {!esServicios && proveedor.politica_devolucion && (
-              <span className="flex items-center gap-1 px-3 py-1 text-sm text-blue-700 bg-blue-100 rounded-full">
-                <AlertCircle size={14} />
-                Devoluciones
-              </span>
+            {services ? (
+              <div className="grid gap-4 md:grid-cols-2">
+                {services.map((item) => (
+                  <ServiceCard
+                    item={item}
+                    openModal={openVariantModal}
+                    telefono={proveedor.telefono}
+                    key={item._id}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="py-8 text-center text-gray-500">
+                No hay {esServicios ? "servicios" : "productos"} disponibles
+              </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* Lista de items */}
-      <div className="p-6 bg-white rounded-lg shadow">
-        <h2 className="mb-4 text-xl font-semibold text-gray-800">
-          {esServicios ? "Servicios ofrecidos" : "Productos disponibles"}
-        </h2>
-
-        {!services ? (
-          <div className="py-8 text-center text-gray-500">
-            No hay {esServicios ? "servicios" : "productos"} disponibles
-          </div>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {services.map((item) => (
-              <ProveedorServiceCard
-                item={item}
-                proveedor={proveedor}
-                abrirModalVariantes={abrirModalVariantes}
-                key={item._id}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* ✅ MODAL DE SELECCIÓN DE VARIANTES */}
+      {/* Modal de selección de variantes */}
       {modalAbierto && productoSeleccionado && (
-        <ModalProductSelected
-          product={productoSeleccionado}
+        <VariantSelectModal
+          handleBuy={handleComprarWhatsApp}
           openModal={setModalAbierto}
-          sendWhatsapp={handleComprarWhatsApp}
-          changeVariants={handleVarianteChange}
-          variant={varianteSeleccionada}
+          handleVarianteChange={handleVarianteChange}
+          product={productoSeleccionado}
+          selectedVariant={varianteSeleccionada}
         />
       )}
-    </div>
+    </>
   );
 }

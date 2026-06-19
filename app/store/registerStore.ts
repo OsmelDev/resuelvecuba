@@ -35,7 +35,7 @@ interface RegisterState {
   prevStep: () => void;
   updateData: (field: keyof RegisterData, value: any) => void;
   resetData: () => void;
-  register: () => Promise<{ success: boolean; error?: string }>;
+  signup: () => Promise<{ success: boolean; error?: string }>;
 }
 
 const initialState: RegisterData = {
@@ -139,7 +139,7 @@ export const useRegisterStore = create<RegisterState>((set, get) => ({
     set({ step: 1, data: { ...initialState }, error: null, isLoading: false });
   },
 
-  register: async () => {
+  signup: async () => {
     const { data } = get();
     set({ isLoading: true, error: null });
 

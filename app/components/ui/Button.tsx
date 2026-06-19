@@ -12,9 +12,15 @@ const FilterButton: FC<ButtonProps> = ({ id, action, label, filter }) => {
     <button
       onClick={action}
       className={`px-3 py-1 rounded-full text-sm transition ${
-        filter === id
-          ? "bg-blue-600 text-white"
-          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+        filter === ""
+          ? "bg-[#1E3A5F] text-white"
+          : filter === "prueba"
+            ? "bg-blue-600 text-white"
+            : filter === "expirado"
+              ? "bg-red-600 text-white"
+              : filter === "suspendido"
+                ? "bg-gray-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
       }`}
     >
       {label}

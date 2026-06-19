@@ -1,8 +1,7 @@
-import NuevoServicioPage from "@/app/view/proveedor/NewServicePage";
-import React from "react";
+import NewServicePage from "@/app/view/proveedor/NewServicePage";
 
 const page = () => {
-  return <NuevoServicioPage />;
+  return <NewServicePage />;
 };
 
 export default page;

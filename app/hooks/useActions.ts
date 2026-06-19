@@ -11,15 +11,26 @@ export const useActions = () => {
   const [procesando, setProcesando] = useState(false);
   const [diasActivar, setDiasActivar] = useState(30);
   const { handleError } = useHandleError();
+  const [formData, setFormData] = useState({
+    nombre: "",
+    descripcion: "",
+    precio: "",
+    categoria: "",
+    tipo: "producto",
+    unidad_medida: "unidad",
+    activo: true,
+  });
+  const [tieneVariantes, setTieneVariantes] = useState(false);
+  const [tipoVariante, setTipoVariante] = useState("talla");
+  const [opcionesVariante, setOpcionesVariante] = useState<string[]>([]);
+  const [cargandoDatos, setCargandoDatos] = useState(true);
+  const [error, setError] = useState("");
+  const { loadProveedoresByState } = useProveedorStore();
 
-  const cargarProveedores = async (estadoFiltro: string) => {
+  const cargarProveedores = async (estadoFiltro?: string) => {
     setLoading(true);
     try {
-      const url = estadoFiltro
-        ? `/admin/proveedores?estado=${estadoFiltro}`
-        : "/admin/proveedores";
-      const response = await api.get(url);
-      setProveedores(response.data.proveedores || []);
+      await loadProveedoresByState(estadoFiltro);
     } catch (error) {
       console.error("Error cargando proveedores:", error);
     } finally {
@@ -29,8 +40,7 @@ export const useActions = () => {
 
   const cargarEstadisticas = async () => {
     try {
-      const response = await fetch("/api/admin/estadisticas");
-      const data = await response.json();
+      const { data } = await api.get("/admin/estadisticas");
       setEstadisticas(data);
     } catch (error) {
       console.error("Error cargando estadísticas:", error);
@@ -62,11 +72,51 @@ export const useActions = () => {
     }
   };
 
+  const cargarProducto = async (id: string) => {
+    try {
+      const response = await api.get(`/servicios/${id}`);
+      const producto = response.data;
+
+      setFormData({
+        nombre: producto.nombre,
+        descripcion: producto.descripcion,
+        precio: producto.precio.toString(),
+        categoria: producto.categoria,
+        tipo: producto.tipo,
+        unidad_medida: producto.unidad_medida || "unidad",
+        activo: producto.activo,
+      });
+
+      if (producto.variantes && producto.variantes.opciones?.length > 0) {
+        setTieneVariantes(true);
+        setTipoVariante(producto.variantes.tipo);
+        setOpcionesVariante(producto.variantes.opciones);
+      }
+    } catch (error) {
+      console.error("Error cargando producto:", error);
+      setError("No se pudo cargar el producto");
+    } finally {
+      setCargandoDatos(false);
+    }
+  };
+
   return {
     cargarProveedores,
     cargarEstadisticas,
     activarProveedor,
     setDiasActivar,
+    cargarProducto,
+    setOpcionesVariante,
+    setTieneVariantes,
+    setTipoVariante,
+    setError,
+    setFormData,
+    formData,
+    tieneVariantes,
+    tipoVariante,
+    opcionesVariante,
+    cargandoDatos,
+    error,
     diasActivar,
     procesando,
     proveedores,

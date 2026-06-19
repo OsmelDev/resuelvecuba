@@ -5,9 +5,9 @@ import { useProveedorEstadoStore } from "@/app/store/proveedorEstadoStore";
 import {
   AlertCircle,
   Calendar,
-  Clock,
   AlertTriangle,
   CheckCircle,
+  X,
 } from "lucide-react";
 
 export default function BannerEstado() {
@@ -20,10 +20,9 @@ export default function BannerEstado() {
 
   if (isLoading || !estado || !mostrar) return null;
 
-  // Caso 1: Cuenta expirada
   if (estado.expirado) {
     return (
-      <div className="p-4 mb-6 border-l-4 border-red-500 rounded-r-lg bg-red-50">
+      <div className="p-4 mb-6 border-l-4 border-red-500 bg-red-50 rounded-r-xl">
         <div className="flex items-start gap-3">
           <AlertCircle
             className="text-red-500 flex-shrink-0 mt-0.5"
@@ -37,24 +36,25 @@ export default function BannerEstado() {
               citas.
             </p>
             <p className="mt-2 text-xs text-red-600">
-              📞 Contacta al administrador para renovar: admin@serviciosapp.com
+              📞 Contacta al administrador para renovar: ✉
+              webmaster@resuelvecuba.com
             </p>
           </div>
           <button
             onClick={() => setMostrar(false)}
             className="text-red-400 hover:text-red-600"
           >
-            ✕
+            <X size={16} />
           </button>
         </div>
       </div>
     );
   }
 
-  // Caso 2: Período de prueba activo (últimos 5 días)
   if (estado.periodo_prueba && estado.dias_restantes <= 5) {
+    const porcentaje = (estado.dias_restantes / 30) * 100;
     return (
-      <div className="p-4 mb-6 border-l-4 border-yellow-500 rounded-r-lg bg-yellow-50">
+      <div className="p-4 mb-6 border-l-4 border-yellow-500 bg-yellow-50 rounded-r-xl">
         <div className="flex items-start gap-3">
           <AlertTriangle
             className="text-yellow-500 flex-shrink-0 mt-0.5"
@@ -72,7 +72,7 @@ export default function BannerEstado() {
             <div className="w-full h-2 mt-2 bg-yellow-200 rounded-full">
               <div
                 className="h-2 transition-all bg-yellow-600 rounded-full"
-                style={{ width: `${(estado.dias_restantes / 30) * 100}%` }}
+                style={{ width: `${porcentaje}%` }}
               />
             </div>
           </div>
@@ -80,19 +80,19 @@ export default function BannerEstado() {
             onClick={() => setMostrar(false)}
             className="text-yellow-400 hover:text-yellow-600"
           >
-            ✕
+            <X size={16} />
           </button>
         </div>
       </div>
     );
   }
 
-  // Caso 3: Período de prueba activo (normal)
   if (estado.periodo_prueba) {
+    const porcentaje = (estado.dias_restantes / 30) * 100;
     return (
-      <div className="p-4 mb-6 border-l-4 border-blue-500 rounded-r-lg bg-blue-50">
+      <div className="bg-blue-50 border-l-4 border-[#3B82F6] p-4 mb-6 rounded-r-xl">
         <div className="flex items-start gap-3">
-          <Calendar className="text-blue-500 flex-shrink-0 mt-0.5" size={20} />
+          <Calendar className="text-[#3B82F6] flex-shrink-0 mt-0.5" size={20} />
           <div className="flex-1">
             <h3 className="font-semibold text-blue-800">
               Período de prueba activo
@@ -103,8 +103,8 @@ export default function BannerEstado() {
             </p>
             <div className="w-full h-2 mt-2 bg-blue-200 rounded-full">
               <div
-                className="h-2 transition-all bg-blue-600 rounded-full"
-                style={{ width: `${(estado.dias_restantes / 30) * 100}%` }}
+                className="bg-[#3B82F6] h-2 rounded-full transition-all"
+                style={{ width: `${porcentaje}%` }}
               />
             </div>
           </div>
@@ -112,17 +112,16 @@ export default function BannerEstado() {
             onClick={() => setMostrar(false)}
             className="text-blue-400 hover:text-blue-600"
           >
-            ✕
+            <X size={16} />
           </button>
         </div>
       </div>
     );
   }
 
-  // Caso 4: Suscripción pagada activa
   if (!estado.periodo_prueba && estado.activo) {
     return (
-      <div className="p-4 mb-6 border-l-4 border-green-500 rounded-r-lg bg-green-50">
+      <div className="p-4 mb-6 border-l-4 border-green-500 bg-green-50 rounded-r-xl">
         <div className="flex items-start gap-3">
           <CheckCircle
             className="text-green-500 flex-shrink-0 mt-0.5"
@@ -139,7 +138,7 @@ export default function BannerEstado() {
             onClick={() => setMostrar(false)}
             className="text-green-400 hover:text-green-600"
           >
-            ✕
+            <X size={16} />
           </button>
         </div>
       </div>

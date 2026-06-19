@@ -1,93 +1,53 @@
 "use client";
-import Link from "next/link";
-import { useAuthStore } from "../store/authStore";
+import Head from "next/head";
+import Hero from "../components/landing_page/HeroSection";
+import PopularCategories from "../components/landing_page/PopularCategoriesSection";
+import Help from "../components/landing_page/HelpSection";
+import Beneficts from "../components/landing_page/BenefictsSection";
+import CTA from "../components/landing_page/CTASection";
+import Footer from "../components/landing_page/Footer";
 
-const LandingPage = () => {
-  const { user } = useAuthStore();
+export default function HomePage() {
   return (
-    <div className="container px-4 py-12 mx-auto">
-      <div className="max-w-4xl mx-auto text-center">
-        <h1 className="mb-6 text-5xl font-bold">
-          Conectamos <span className="text-blue-600">profesionales</span> con{" "}
-          <span className="text-green-600">clientes</span>
-        </h1>
-        <p className="mb-8 text-xl text-gray-600">
-          Encuentra el servicio que necesitas o haz crecer tu negocio
-        </p>
-        {!user && (
-          <div className="flex justify-center gap-4">
-            <Link
-              href="/register?role=cliente"
-              className="px-6 py-3 text-lg font-medium text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
-            >
-              Soy Cliente
-            </Link>
-            <Link
-              href="/register?role=proveedor"
-              className="px-6 py-3 text-lg font-medium text-white transition bg-green-600 rounded-lg hover:bg-green-700"
-            >
-              Soy Proveedor
-            </Link>
-          </div>
-        )}
-      </div>
-      {!user ? (
-        <div className="grid gap-8 mt-20 md:grid-cols-3">
-          <div className="p-6 text-center transition bg-white border shadow-sm rounded-xl hover:shadow-md">
-            <div className="mb-4 text-5xl">🔍</div>
-            <h3 className="mb-2 text-xl font-semibold">Busca</h3>
-            <p className="text-gray-600">
-              Encuentra profesionales calificados cerca de ti
-            </p>
-          </div>
-          <div className="p-6 text-center transition bg-white border shadow-sm rounded-xl hover:shadow-md">
-            <div className="mb-4 text-5xl">📅</div>
-            <h3 className="mb-2 text-xl font-semibold">Agenda</h3>
-            <p className="text-gray-600">
-              Programa tu cita de forma rápida y sencilla
-            </p>
-          </div>
-          <div className="p-6 text-center transition bg-white border shadow-sm rounded-xl hover:shadow-md">
-            <div className="mb-4 text-5xl">⭐</div>
-            <h3 className="mb-2 text-xl font-semibold">Califica</h3>
-            <p className="text-gray-600">
-              Comparte tu experiencia y ayuda a la comunidad
-            </p>
-          </div>
-        </div>
-      ) : (
-        <div className="grid gap-8 mt-20 md:grid-cols-3">
-          <Link href="/cliente/buscar" className="cursor-pointer">
-            <div className="p-6 text-center transition bg-white border shadow-sm rounded-xl hover:shadow-md">
-              <div className="mb-4 text-5xl">🔍</div>
-              <h3 className="mb-2 text-xl font-semibold">Busca</h3>
-              <p className="text-gray-600">
-                Encuentra profesionales calificados cerca de ti
-              </p>
-            </div>
-          </Link>
+    <>
+      <Head>
+        <title>ResuelveCuba - Tu red de profesionales en Cuba</title>
+        <meta
+          name="description"
+          content="Encuentra profesionales de confianza en Cuba. Servicios y productos a tu alcance."
+        />
+        <meta
+          name="keywords"
+          content="profesionales Cuba, servicios Cuba, proveedores Cuba, resolver Cuba"
+        />
+        <meta
+          property="og:title"
+          content="ResuelveCuba - Tu red de profesionales"
+        />
+        <meta
+          property="og:description"
+          content="Conecta con los mejores profesionales en Cuba"
+        />
+        <meta property="og:type" content="website" />
+      </Head>
 
-          <Link href="/cliente/mis-citas" className="cursor-pointer">
-            <div className="p-6 h-full text-center transition bg-white border shadow-sm rounded-xl hover:shadow-md">
-              <div className="mb-4 text-5xl">📅</div>
-              <h3 className="mb-2 text-xl font-semibold">Agenda</h3>
-              <p className="text-gray-600">
-                Programa tu cita de forma rápida y sencilla
-              </p>
-            </div>
-          </Link>
+      {/* Hero Section */}
+      <Hero />
 
-          <div className="p-6 text-center transition bg-white border shadow-sm rounded-xl hover:shadow-md">
-            <div className="mb-4 text-5xl">⭐</div>
-            <h3 className="mb-2 text-xl font-semibold">Califica</h3>
-            <p className="text-gray-600">
-              Comparte tu experiencia y ayuda a la comunidad
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
+      {/* Categorías populares */}
+      <PopularCategories />
+
+      {/* Cómo funciona */}
+      <Help />
+
+      {/* Beneficios */}
+      <Beneficts />
+
+      {/* CTA Final */}
+      <CTA />
+
+      {/* Footer */}
+      <Footer />
+    </>
   );
-};
-
-export default LandingPage;
+}

@@ -1,7 +1,6 @@
 "use client";
 
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { useActions } from "@/app/hooks/useActions";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { Proveedor } from "@/app/types/dataTypes";
 import { useAdminStore } from "@/app/store/adminStore";
 
@@ -27,8 +26,6 @@ const ActivationModal: FC<ActivationModalProps> = ({
     );
     if (ok) await cargarProveedores(estadoFiltro);
   };
-
-  console.log(dias, estadoFiltro);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

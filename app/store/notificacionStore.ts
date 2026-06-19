@@ -14,11 +14,13 @@ interface NotificacionState {
   notificaciones: Notificacion[];
   noLeidas: number;
   isLoading: boolean;
-  conectarSocket: (userId: string) => void;
+  socketEventsRegistered: boolean;
+  socketConnected: boolean;
+  conectarSocket: (userId: string, socket: any) => void;
   cargarNotificaciones: () => Promise<void>;
   marcarComoLeida: (id: string) => Promise<void>;
   marcarTodasLeidas: () => Promise<void>;
-  eliminarNotificacion: (id: string) => Promise<void>;
+  removeNotification: (id: string) => Promise<void>;
   eliminarLeidas: () => Promise<void>;
 }
 
@@ -26,20 +28,19 @@ export const useNotificacionStore = create<NotificacionState>((set, get) => ({
   notificaciones: [],
   noLeidas: 0,
   isLoading: false,
+  socketEventsRegistered: false,
+  socketConnected: false,
 
-  conectarSocket: (userId: string) => {
-    const socket = getSocket();
-    if (socket) {
-      socket.emit("join", userId);
+  conectarSocket: (userId, socket) => {
+    socket?.emit("join", userId);
 
-      socket.on("nueva_notificacion", (notificacion: Notificacion) => {
-        console.log("📨 Notificación en tiempo real:", notificacion);
-        set((state) => ({
-          notificaciones: [notificacion, ...state.notificaciones],
-          noLeidas: state.noLeidas + 1,
-        }));
-      });
-    }
+    socket?.on("nueva_notificacion", (notificacion: Notificacion) => {
+      console.log("📨 Notificación en tiempo real:", notificacion);
+      set((state) => ({
+        notificaciones: [notificacion, ...state.notificaciones],
+        noLeidas: state.noLeidas + 1,
+      }));
+    });
   },
 
   cargarNotificaciones: async () => {
@@ -48,7 +49,7 @@ export const useNotificacionStore = create<NotificacionState>((set, get) => ({
       const { data } = await api.get("/notificaciones");
 
       const notificaciones = data.notificaciones;
-      console.log(data);
+
       const noLeidas = notificaciones.filter(
         (n: Notificacion) => !n.leida,
       ).length;
@@ -91,7 +92,7 @@ export const useNotificacionStore = create<NotificacionState>((set, get) => ({
     }
   },
 
-  eliminarNotificacion: async (id: string) => {
+  removeNotification: async (id: string) => {
     try {
       await api.delete(`/notificaciones/${id}`);
       set((state) => {

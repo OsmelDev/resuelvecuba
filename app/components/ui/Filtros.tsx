@@ -49,7 +49,7 @@ export function Filtros({
           <select
             value={value || ""}
             onChange={(e) => handleChange(filter.key, e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">Todos</option>
             {filter.options?.map((opt) => (
@@ -83,7 +83,7 @@ export function Filtros({
 
       case "range":
         return (
-          <div className="flex gap-3 items-center">
+          <div className="flex items-center gap-3">
             <input
               type="number"
               min={filter.min}
@@ -93,7 +93,7 @@ export function Filtros({
               onChange={(e) =>
                 handleChange(filter.key, { ...value, min: e.target.value })
               }
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             <span className="text-gray-400">—</span>
             <input
@@ -105,7 +105,7 @@ export function Filtros({
               onChange={(e) =>
                 handleChange(filter.key, { ...value, max: e.target.value })
               }
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-1/2 px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         );
@@ -125,17 +125,17 @@ export function Filtros({
   }).length;
 
   return (
-    <div className="bg-white rounded-lg shadow mb-6">
+    <div className="mb-6 bg-white rounded-lg shadow">
       {/* Header */}
       <div
-        className="p-4 flex justify-between items-center cursor-pointer"
+        className="flex items-center justify-between p-4 cursor-pointer"
         onClick={() => setExpandido(!expandido)}
       >
         <div className="flex items-center gap-2">
           <Filter size={18} className="text-gray-500" />
           <h3 className="font-medium text-gray-800">{titulo}</h3>
           {filtrosActivos > 0 && (
-            <span className="bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            <span className="flex items-center justify-center w-5 h-5 text-xs text-white bg-blue-600 rounded-full">
               {filtrosActivos}
             </span>
           )}
@@ -147,11 +147,11 @@ export function Filtros({
 
       {/* Body */}
       {expandido && (
-        <div className="p-4 pt-0 border-t">
-          <div className="grid md:grid-cols-3 gap-4 mb-4">
+        <div className="p-4 pt-2 border-t">
+          <div className="grid gap-4 mb-4 md:grid-cols-3">
             {filters.map((filter) => (
               <div key={filter.key}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block mb-1 text-sm font-medium text-gray-700">
                   {filter.label}
                 </label>
                 {renderInput(filter)}
@@ -162,7 +162,7 @@ export function Filtros({
             <button
               type="button"
               onClick={onReset}
-              className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 flex items-center gap-1"
+              className="flex items-center gap-1 px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
             >
               <X size={14} />
               Limpiar
@@ -171,7 +171,7 @@ export function Filtros({
               type="button"
               onClick={onApply}
               disabled={isLoading}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 text-sm"
+              className="px-6 py-2 text-sm text-white transition bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
             >
               {isLoading ? "Aplicando..." : "Aplicar filtros"}
             </button>

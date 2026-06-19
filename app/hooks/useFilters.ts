@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Categoria, useCategoryStore } from "../store/categoriesStore";
-import { Proveedor } from "../types/dataTypes";
 
 export const useFilters = () => {
   const { categoris } = useCategoryStore();
@@ -21,5 +20,8 @@ export const useFilters = () => {
     setFilteredCategoris(result);
   };
 
-  return { filterCategoris, filteredCategoris };
+  return {
+    filterCategoris,
+    filteredCategoris,
+  };
 };
