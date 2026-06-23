@@ -4,6 +4,23 @@ import { useHandleError } from "./useHandleError";
 import { Estadisticas, Proveedor } from "../types/dataTypes";
 import { useProveedorStore } from "../store/proveedorStore";
 
+export interface ProductosFormData {
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  categoria: {
+    _id: string;
+    nombre: string;
+  };
+  tipo: string | null;
+  unidad_medida: string;
+  activo: boolean;
+  variantes: {
+    tipo: string;
+    opciones: string[];
+  } | null;
+}
+
 export const useActions = () => {
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -11,19 +28,37 @@ export const useActions = () => {
   const [procesando, setProcesando] = useState(false);
   const [diasActivar, setDiasActivar] = useState(30);
   const { handleError } = useHandleError();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProductosFormData>({
     nombre: "",
     descripcion: "",
-    precio: "",
-    categoria: "",
+    precio: 0,
+    categoria: {
+      _id: "",
+      nombre: "",
+    },
     tipo: "producto",
     unidad_medida: "unidad",
     activo: true,
+    variantes: {
+      tipo: "",
+      opciones: [""],
+    },
   });
   const [tieneVariantes, setTieneVariantes] = useState(false);
   const [tipoVariante, setTipoVariante] = useState("talla");
   const [opcionesVariante, setOpcionesVariante] = useState<string[]>([]);
   const [cargandoDatos, setCargandoDatos] = useState(true);
+
+  const [serviceFormData, setServiceFormData] = useState({
+    nombre: "",
+    descripcion: "",
+    precio: "",
+    categoria: { _id: "", nombre: "" },
+    duracion_estimada: "",
+    incluye_materiales: false,
+    activo: true,
+  });
+
   const [error, setError] = useState("");
   const { loadProveedoresByState } = useProveedorStore();
 
@@ -85,6 +120,7 @@ export const useActions = () => {
         tipo: producto.tipo,
         unidad_medida: producto.unidad_medida || "unidad",
         activo: producto.activo,
+        variantes: producto.variantes,
       });
 
       if (producto.variantes && producto.variantes.opciones?.length > 0) {
@@ -100,9 +136,31 @@ export const useActions = () => {
     }
   };
 
+  const cargarServicio = async (id: string) => {
+    try {
+      const response = await api.get(`/servicios/${id}`);
+      const servicio = response.data;
+      setServiceFormData({
+        nombre: servicio.nombre,
+        descripcion: servicio.descripcion,
+        precio: servicio.precio.toString(),
+        categoria: servicio.categoria,
+        duracion_estimada: servicio.duracion_estimada || "",
+        incluye_materiales: servicio.incluye_materiales || false,
+        activo: servicio.activo,
+      });
+    } catch (error) {
+      console.error("Error cargando servicio:", error);
+      setError("No se pudo cargar el servicio");
+    } finally {
+      setCargandoDatos(false);
+    }
+  };
+
   return {
     cargarProveedores,
     cargarEstadisticas,
+    cargarServicio,
     activarProveedor,
     setDiasActivar,
     cargarProducto,
@@ -111,6 +169,9 @@ export const useActions = () => {
     setTipoVariante,
     setError,
     setFormData,
+    setServiceFormData,
+    serviceFormData,
+
     formData,
     tieneVariantes,
     tipoVariante,

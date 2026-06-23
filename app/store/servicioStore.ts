@@ -3,6 +3,7 @@ import api from "@/app/services/api";
 import { AxiosError } from "axios";
 import { Categoria } from "./categoriesStore";
 import { Service } from "../types/dataTypes";
+import { ProductosFormData } from "../hooks/useActions";
 
 interface Filtro {
   categoria: string;
@@ -21,12 +22,23 @@ interface ServicioState {
   }) => Promise<void>;
   loadServiciosByProveedor: (proveedorId: string) => Promise<void>;
   loadCategorias: () => Promise<void>;
-  crearServicio: (
-    data: Partial<Service>,
-  ) => Promise<{ success: boolean; error?: string }>;
+  crearServicio: (data: {
+    precio: number;
+    tipo: string;
+    nombre: string;
+    descripcion: string;
+    categoria: string;
+    unidad_medida: string;
+    variantes?:
+      | {
+          tipo: string;
+          opciones: string[];
+        }
+      | undefined;
+  }) => Promise<{ success: boolean; error?: string }>;
   actualizarServicio: (
     id: string,
-    data: Partial<Service>,
+    data: Partial<ProductosFormData>,
   ) => Promise<{ success: boolean; error?: string }>;
   eliminarServicio: (
     id: string,

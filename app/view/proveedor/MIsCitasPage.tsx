@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  ForwardRefExoticComponent,
+  RefAttributes,
+  useEffect,
+  useState,
+} from "react";
 import { useCitaStore } from "@/app/store/citaStore";
 import { useProveedorEstadoStore } from "@/app/store/proveedorEstadoStore";
 import BannerEstado from "@/app/components/proveedor/BannerEstado";
@@ -13,11 +18,18 @@ import {
   User,
   Phone,
   Eye,
+  LucideProps,
 } from "lucide-react";
 
 const estadoConfig: Record<
   string,
-  { label: string; color: string; icon: any }
+  {
+    label: string;
+    color: string;
+    icon: ForwardRefExoticComponent<
+      Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+    >;
+  }
 > = {
   pendiente: {
     label: "Pendiente",

@@ -4,10 +4,9 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import Head from "next/head";
 import { useServicioStore } from "@/app/store/servicioStore";
-import api from "@/app/services/api";
 import { ArrowLeft, Save, Loader2, Plus, X } from "lucide-react";
 import LoadingComponent from "@/app/components/LoadingComponent";
-import { useActions } from "@/app/hooks/useActions";
+import { ProductosFormData, useActions } from "@/app/hooks/useActions";
 
 const categoriasPredefinidas = [
   "Ropa",
@@ -94,13 +93,15 @@ export default function EditProductPage() {
       return;
     }
 
-    const payload: any = {
+    const payload: ProductosFormData = {
       nombre: formData.nombre,
       descripcion: formData.descripcion,
       precio: Number(formData.precio),
       categoria: formData.categoria,
       unidad_medida: formData.unidad_medida,
       activo: formData.activo,
+      tipo: formData.tipo,
+      variantes: null,
     };
 
     if (tieneVariantes && opcionesVariante.length > 0) {
@@ -198,9 +199,15 @@ export default function EditProductPage() {
                 </label>
                 <select
                   required
-                  value={formData.categoria}
+                  value={formData.categoria.nombre}
                   onChange={(e) =>
-                    setFormData({ ...formData, categoria: e.target.value })
+                    setFormData({
+                      ...formData,
+                      categoria: {
+                        ...formData.categoria,
+                        nombre: e.target.value,
+                      },
+                    })
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#3B82F6] focus:border-[#3B82F6] outline-none transition"
                 >
@@ -234,7 +241,10 @@ export default function EditProductPage() {
                     step="100"
                     value={formData.precio}
                     onChange={(e) =>
-                      setFormData({ ...formData, precio: e.target.value })
+                      setFormData({
+                        ...formData,
+                        precio: Number(e.target.value),
+                      })
                     }
                     className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#3B82F6] focus:border-[#3B82F6] outline-none transition"
                   />
